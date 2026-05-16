@@ -13,11 +13,10 @@ function App() {
       <Toaster position="top-right" />
 
       <Routes>
-        {/* ලොග් වෙන්න කලින් යන පිටු (Unprotected) */}
+
         <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
 
-        {/* ළමයින්ගේ පිටු - ProtectedRoute එකෙන් ආවරණය කරලා තියෙන්නේ */}
         <Route 
           path='/*' 
           element={
@@ -27,7 +26,6 @@ function App() {
           } 
         />
 
-        {/* Admin ගේ පිටු - මේකට role="admin" කියලත් යවනවා */}
         <Route 
           path='/admin/*' 
           element={

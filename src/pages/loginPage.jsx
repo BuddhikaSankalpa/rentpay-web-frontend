@@ -9,124 +9,137 @@ import { BiKey } from "react-icons/bi";
 import { BsGoogle } from "react-icons/bs";
 
 export default function LoginPage() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     async function handleLogin(){
-        setLoading(true)
+        setLoading(true);
 
         try{
             const res = await api.post("/users/login",{
                 email : email,
                 password : password
-            })
+            });
             
-            // 🔴 මෙන්න මේක අලුතින් දැම්මා! මේකෙන් පෙනෙයි Backend එකෙන් මොනවද එවන්නේ කියලා.
             console.log("Login Response Data: ", res.data);
 
-            toast.success(res.data.message || "Login Successful!")
+            toast.success(res.data.message || "Login Successful!");
             
-            localStorage.setItem("token" , res.data.token)
-            localStorage.setItem("userEmail", email)
+            localStorage.setItem("token" , res.data.token);
+            localStorage.setItem("userEmail", email);
 
-            // 🔴 Backend එකෙන් එවන්න පුළුවන් හැම විදිහක්ම මෙතන චෙක් කරනවා
             const isAdminUser = res.data.user?.is_admin || res.data.is_admin || res.data.user?.isAdmin || res.data.isAdmin; 
 
             if(isAdminUser){
-                console.log("Admin කෙනෙක් ලොග් වුණා!"); // Debugging
-                localStorage.setItem("userRole", "admin")
-                navigate("/admin")
+                console.log("Admin කෙනෙක් ලොග් වුණා!");
+                localStorage.setItem("userRole", "admin");
+                navigate("/admin");
             } else {
-                console.log("ළමයෙක් ලොග් වුණා!"); // Debugging
-                localStorage.setItem("userRole", "student")
-                navigate("/")
+                console.log("ළමයෙක් ලොග් වුණා!"); 
+                localStorage.setItem("userRole", "student");
+                navigate("/");
             }
 
         } catch(err){
-            toast.error(err?.response?.data?.message || "Login failed")
+            toast.error(err?.response?.data?.message || "Login failed");
         } finally {
-            setLoading(false) 
+            setLoading(false); 
         }
     }
 
     return (
-        <div className="w-full h-screen bg-gray-50 flex justify-center items-center font-sans">
+        <div className="relative w-full h-screen bg-[#070510] flex justify-center items-center font-sans overflow-hidden">
+            
+            {/* Ambient Background Effects */}
+            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-900/30 blur-[120px] rounded-full pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none"></div>
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.15] pointer-events-none"></div>
 
-            <div className="w-[400px] bg-white shadow-lg border border-gray-200 rounded-2xl flex flex-col p-8">
+            <div className="relative z-10 w-full max-w-[420px] bg-[#0a0815]/60 backdrop-blur-xl border border-white/[0.08] shadow-[0_8px_32px_0_rgba(0,0,0,0.5)] rounded-3xl flex flex-col p-10 mx-4">
                 
-                <h1 className="w-full text-center text-3xl font-bold text-gray-800 mb-8">Login</h1>
+                <div className="text-center mb-10">
+                    <img src="/logo.png" alt="Nevermore Logo" className="h-16 mx-auto mb-4 opacity-90" 
+                         onError={(e) => e.target.style.display = 'none'} />
+                    <h1 className="text-3xl font-serif text-white tracking-wide">Welcome Back</h1>
+                    <p className="text-gray-500 text-xs tracking-widest uppercase mt-2">Enter the shadows</p>
+                </div>
 
                 {/* Email Field */}
-                <div className="w-full mb-5">
-                    <label className="text-gray-700 text-sm font-medium flex items-center gap-2 mb-2 ml-1">
-                        <MdEmail className="text-lg text-gray-500" /> Email Address
+                <div className="w-full mb-6">
+                    <label className="text-[10px] tracking-widest text-gray-400 uppercase font-bold mb-2 ml-1 block">
+                        Email Address
                     </label>
-                    <input 
-                        className="w-full h-[45px] rounded-lg px-4 border border-gray-300 bg-white text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" 
-                        type="email" 
-                        placeholder="example@gmail.com" 
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <div className="relative">
+                        <MdEmail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none" />
+                        <input 
+                            className="w-full h-[50px] bg-[#161121]/50 border border-white/[0.05] rounded-xl pl-12 pr-4 text-white placeholder-gray-600 outline-none focus:border-[#A58ED4] focus:bg-[#161121] focus:ring-1 focus:ring-[#A58ED4]/50 transition-all" 
+                            type="email" 
+                            placeholder="wednesday@nevermore.edu" 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 {/* Password Field */}
-                <div className="w-full mb-3">
-                    <label className="text-gray-700 text-sm font-medium flex items-center gap-2 mb-2 ml-1">
-                        <BiKey className="text-lg text-gray-500" /> Password
+                <div className="w-full mb-4">
+                    <label className="text-[10px] tracking-widest text-gray-400 uppercase font-bold mb-2 ml-1 block">
+                        Password
                     </label>
-                    <input 
-                        className="w-full h-[45px] rounded-lg px-4 border border-gray-300 bg-white text-gray-900 placeholder-gray-400 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all" 
-                        type="password" 
-                        placeholder="•••••••••••" 
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <div className="relative">
+                        <BiKey className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-xl pointer-events-none" />
+                        <input 
+                            className="w-full h-[50px] bg-[#161121]/50 border border-white/[0.05] rounded-xl pl-12 pr-4 text-white placeholder-gray-600 outline-none focus:border-[#A58ED4] focus:bg-[#161121] focus:ring-1 focus:ring-[#A58ED4]/50 transition-all" 
+                            type="password" 
+                            placeholder="•••••••••••" 
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                    </div>
                 </div>
 
-                <div className="w-full flex flex-col gap-4">
-                    <Link to="/forget-password" underline="none" className="text-gray-500 text-sm text-right hover:text-blue-600 transition-colors">
-                        Forget password?
+                <div className="w-full flex flex-col gap-6 mt-2">
+                    <Link to="/forget-password" underline="none" className="text-gray-500 text-xs text-right hover:text-[#A58ED4] transition-colors">
+                        Lost your key?
                     </Link>
 
-                    {/* Button eke `disabled={loading}` nisa apahu press karanna ba */}
                     <button 
-                        className={`w-full h-[50px] rounded-lg font-bold text-lg transition-all duration-300 flex justify-center items-center gap-2
+                        className={`w-full h-[50px] rounded-xl text-[11px] font-bold tracking-[0.2em] uppercase transition-all duration-300 flex justify-center items-center gap-3
                         ${loading 
-                            ? "bg-gray-400 cursor-not-allowed opacity-70 text-white" 
-                            : "bg-blue-600 hover:bg-blue-700 text-white shadow-md active:scale-95"
+                            ? "bg-white/10 cursor-not-allowed opacity-70 text-gray-400 border border-white/10" 
+                            : "bg-gradient-to-r from-[#4A235A] to-[#7B1FA2] hover:from-[#5B2C6F] hover:to-[#8E24AA] text-white shadow-lg shadow-purple-900/20 active:scale-[0.98]"
                         }`}
                         disabled={loading}
                         onClick={handleLogin}
                     >
                         {loading ? (
                             <>
-                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                <span>Processing...</span>
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                <span>Authenticating...</span>
                             </>
                         ) : (
-                            "Login"
+                            "Sign In"
                         )}
                     </button>
 
-                    <p className="text-gray-600 text-sm text-center mt-2">
-                        Don't have an account? <Link to="/register" className="font-semibold text-blue-600 hover:underline ml-1">Register</Link>
+                    <p className="text-gray-500 text-xs text-center mt-2">
+                        New to Nevermore? <Link to="/register" className="font-bold text-[#A58ED4] hover:text-white transition-colors ml-1 uppercase tracking-wider">Enroll Now</Link>
                     </p>
                 </div>
 
-                <div className="flex items-center my-6">
-                    <div className="flex-1 h-[1px] bg-gray-200"></div>
-                    <span className="px-3 text-gray-400 text-xs uppercase font-medium">OR</span>
-                    <div className="flex-1 h-[1px] bg-gray-200"></div>
+                <div className="flex items-center my-6 opacity-50">
+                    <div className="flex-1 h-[1px] bg-gradient-to-r from-transparent to-gray-500"></div>
+                    <span className="px-4 text-gray-400 text-[10px] uppercase font-bold tracking-widest">OR</span>
+                    <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-gray-500"></div>
                 </div>
 
-                <button className="w-full h-[50px] bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 rounded-lg flex justify-center items-center gap-3 font-semibold shadow-sm active:scale-95 transition-all duration-300 mt-auto">
-                    <BsGoogle className="text-red-500 text-lg" />
-                    <span>Sign In with Google</span>
+                <button className="w-full h-[50px] bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.08] text-gray-300 rounded-xl flex justify-center items-center gap-3 text-[11px] font-bold tracking-widest uppercase active:scale-[0.98] transition-all duration-300 mt-auto">
+                    <BsGoogle className="text-lg" />
+                    <span>Continue with Google</span>
                 </button>
             </div>
 
