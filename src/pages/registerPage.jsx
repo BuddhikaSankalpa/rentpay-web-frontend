@@ -4,6 +4,20 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { MdPerson, MdEmail, MdPhone, MdLocationOn, MdSchool, MdBadge, MdVpnKey } from "react-icons/md";
 
+// InputField component eka eliyata gaththa
+const InputField = ({ icon: Icon, label, ...props }) => (
+    <div className="w-full">
+        <label className="text-[10px] tracking-widest text-gray-400 uppercase font-bold mb-2 ml-1 block">{label}</label>
+        <div className="relative">
+            {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none" />}
+            <input 
+                className={`w-full h-[50px] bg-[#161121]/50 border border-white/[0.05] rounded-xl ${Icon ? 'pl-12' : 'pl-4'} pr-4 text-white placeholder-gray-600 outline-none focus:border-[#A58ED4] focus:bg-[#161121] focus:ring-1 focus:ring-[#A58ED4]/50 transition-all`}
+                {...props} 
+            />
+        </div>
+    </div>
+);
+
 export default function RegisterPage() {
 
     const [first_name, setFirstName] = useState("");
@@ -57,19 +71,6 @@ export default function RegisterPage() {
             setLoading(false);
         }
     }
-
-    const InputField = ({ icon: Icon, label, ...props }) => (
-        <div className="w-full">
-            <label className="text-[10px] tracking-widest text-gray-400 uppercase font-bold mb-2 ml-1 block">{label}</label>
-            <div className="relative">
-                {Icon && <Icon className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none" />}
-                <input 
-                    className={`w-full h-[50px] bg-[#161121]/50 border border-white/[0.05] rounded-xl ${Icon ? 'pl-12' : 'pl-4'} pr-4 text-white placeholder-gray-600 outline-none focus:border-[#A58ED4] focus:bg-[#161121] focus:ring-1 focus:ring-[#A58ED4]/50 transition-all`}
-                    {...props} 
-                />
-            </div>
-        </div>
-    );
 
     return (
         <div className="relative w-full min-h-screen bg-[#070510] flex justify-center items-center font-sans py-12 px-4 overflow-hidden">
