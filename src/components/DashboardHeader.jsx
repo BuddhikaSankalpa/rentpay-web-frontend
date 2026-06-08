@@ -1,5 +1,5 @@
 import React from 'react';
-import UserData from './UserData';
+import UserData from './userData';
 
 export default function DashboardHeader() {
   return (
