@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // ඔයාගේ Backend URL එක
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api', // Uses the deployed backend URL from .env in production
 });
 
 // 1. Request යද්දී Token එක අරන් යන කොටස (මේක ඔයා ගාව දැනටමත් තියෙනවා)
