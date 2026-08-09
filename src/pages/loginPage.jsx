@@ -7,6 +7,7 @@ import { useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { BiKey } from "react-icons/bi";
 import { BsGoogle } from "react-icons/bs";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -38,6 +39,30 @@ export default function LoginPage() {
             toast.error(err?.response?.data?.message || "Login failed");
         } finally {
             setLoading(false); 
+        }
+    }
+
+    async function handleGoogleSuccess(credentialResponse) {
+        setLoading(true);
+        try {
+            const res = await api.post("/users/google", {
+                credential: credentialResponse.credential
+            });
+            toast.success(res.data.message || "Google Login Successful!");
+            localStorage.setItem("token" , res.data.token);
+            localStorage.setItem("userEmail", res.data.user.email);
+            const isAdminUser = res.data.user?.is_admin || res.data.user?.isAdmin; 
+            if(isAdminUser){
+                localStorage.setItem("userRole", "admin");
+                navigate("/admin");
+            } else {
+                localStorage.setItem("userRole", "student");
+                navigate("/");
+            }
+        } catch(err) {
+            toast.error(err?.response?.data?.message || "Google Login failed");
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -131,10 +156,16 @@ export default function LoginPage() {
                         <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-gray-500"></div>
                     </div>
 
-                    <button className="w-full h-[50px] bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.08] text-gray-300 rounded-xl flex justify-center items-center gap-3 text-[11px] font-bold tracking-widest uppercase active:scale-[0.98] transition-all duration-300 mt-auto">
-                        <BsGoogle className="text-lg" />
-                        <span>Continue with Google</span>
-                    </button>
+                    <div className="w-full flex justify-center mt-auto">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => toast.error("Google Login failed")}
+                            theme="filled_black"
+                            shape="rectangular"
+                            size="large"
+                            text="continue_with"
+                        />
+                    </div>
                 </div>
 
                 {/* ── RIGHT PANEL: Wednesday-themed Info Panel ── */}
