@@ -27,15 +27,19 @@ api.interceptors.response.use(
   (error) => {
     // Error එක 401 නම් (Token එක නෑ, නැත්නම් Expire වෙලා නම්)
     if (error.response && error.response.status === 401) {
-      console.warn("Session Expired or Unauthorized. Redirecting to login...");
-      
-      // Local Storage එකේ තියෙන පරණ දේවල් ඔක්කොම මකනවා
-      localStorage.removeItem('token');
-      localStorage.removeItem('userRole');
-      localStorage.removeItem('userEmail');
-      
-      // කෙලින්ම Login පිටුවට හරවලා යවනවා
-      window.location.href = '/login';
+      // Login හෝ Register page එකේදී නම් redirect කරන්න එපා (එතකොට වැරදි password ගැහුවොත් page eka reload වෙනවා)
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/login' && currentPath !== '/register') {
+          console.warn("Session Expired or Unauthorized. Redirecting to login...");
+          
+          // Local Storage එකේ තියෙන පරණ දේවල් ඔක්කොම මකනවා
+          localStorage.removeItem('token');
+          localStorage.removeItem('userRole');
+          localStorage.removeItem('userEmail');
+          
+          // කෙලින්ම Login පිටුවට හරවලා යවනවා
+          window.location.href = '/login';
+      }
     }
     
     return Promise.reject(error);
