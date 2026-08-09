@@ -7,7 +7,7 @@ import { useState } from "react";
 import { MdEmail } from "react-icons/md";
 import { BiKey } from "react-icons/bi";
 import { BsGoogle } from "react-icons/bs";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -42,29 +42,32 @@ export default function LoginPage() {
         }
     }
 
-    async function handleGoogleSuccess(credentialResponse) {
-        setLoading(true);
-        try {
-            const res = await api.post("/users/google", {
-                credential: credentialResponse.credential
-            });
-            toast.success(res.data.message || "Google Login Successful!");
-            localStorage.setItem("token" , res.data.token);
-            localStorage.setItem("userEmail", res.data.user.email);
-            const isAdminUser = res.data.user?.is_admin || res.data.user?.isAdmin; 
-            if(isAdminUser){
-                localStorage.setItem("userRole", "admin");
-                navigate("/admin");
-            } else {
-                localStorage.setItem("userRole", "student");
-                navigate("/");
+    const handleGoogleSuccess = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            setLoading(true);
+            try {
+                const res = await api.post("/users/google", {
+                    access_token: tokenResponse.access_token
+                });
+                toast.success(res.data.message || "Google Login Successful!");
+                localStorage.setItem("token" , res.data.token);
+                localStorage.setItem("userEmail", res.data.user.email);
+                const isAdminUser = res.data.user?.is_admin || res.data.user?.isAdmin; 
+                if(isAdminUser){
+                    localStorage.setItem("userRole", "admin");
+                    navigate("/admin");
+                } else {
+                    localStorage.setItem("userRole", "student");
+                    navigate("/");
+                }
+            } catch(err) {
+                toast.error(err?.response?.data?.message || "Google Login failed");
+            } finally {
+                setLoading(false);
             }
-        } catch(err) {
-            toast.error(err?.response?.data?.message || "Google Login failed");
-        } finally {
-            setLoading(false);
-        }
-    }
+        },
+        onError: () => toast.error("Google Login failed")
+    });
 
     return (
         <div className="relative w-full h-screen flex justify-center items-center font-sans overflow-hidden">
@@ -157,14 +160,14 @@ export default function LoginPage() {
                     </div>
 
                     <div className="w-full flex justify-center mt-auto">
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={() => toast.error("Google Login failed")}
-                            theme="filled_black"
-                            shape="rectangular"
-                            size="large"
-                            text="continue_with"
-                        />
+                        <button
+                            onClick={() => handleGoogleSuccess()}
+                            disabled={loading}
+                            className="flex items-center justify-center w-full max-w-[420px] h-[50px] rounded-xl border border-[#3b354b] hover:border-[#675f7e] bg-[#1a1525] hover:bg-[#251e33] transition-all text-gray-200 font-bold text-[11px] tracking-[0.15em] uppercase gap-3 shadow-[0_2px_10px_0_rgba(0,0,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <BsGoogle className="text-white text-lg" />
+                            Continue with Google
+                        </button>
                     </div>
                 </div>
 
