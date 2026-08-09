@@ -3,23 +3,26 @@ import UserData from './userData';
 
 export default function DashboardHeader() {
   return (
-    <div className="relative w-full h-[320px] md:h-[380px] overflow-hidden rounded-2xl shadow-2xl">
+    <div className="relative w-full h-[320px] md:h-[380px] rounded-2xl shadow-2xl">
 
-      {/* Background: bg.png */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/bg.png')" }}
-      />
+      {/* Background Wrapper */}
+      <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+        {/* Background: bg.png */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/bg.png')" }}
+        />
 
-      {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-      {/* Purple glow */}
-      <div className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-purple-900/20 blur-3xl pointer-events-none" />
+        {/* Purple glow */}
+        <div className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-purple-900/20 blur-3xl" />
+      </div>
 
       {/* ── Top bar: Right side aligned UserData ── */}
-      <div className="relative z-10 flex items-center justify-end px-6 md:px-14 pt-6">
+      <div className="relative z-20 flex items-center justify-end px-6 md:px-14 pt-6">
         {/* Existing UserData component — full user info + dropdown */}
         <UserData />
       </div>
