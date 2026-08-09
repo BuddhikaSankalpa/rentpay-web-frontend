@@ -27,6 +27,12 @@ api.interceptors.response.use(
   (error) => {
     // Error එක 401 නම් (Token එක නෑ, නැත්නම් Expire වෙලා නම්)
     if (error.response && error.response.status === 401) {
+      // Do not trigger global logout for vault verification errors
+      const requestUrl = error.config?.url || "";
+      if (requestUrl.includes('/settings/verify-owner')) {
+        return Promise.reject(error);
+      }
+
       // Login හෝ Register page එකේදී නම් redirect කරන්න එපා (එතකොට වැරදි password ගැහුවොත් page eka reload වෙනවා)
       const currentPath = window.location.pathname;
       if (currentPath !== '/login' && currentPath !== '/register') {
